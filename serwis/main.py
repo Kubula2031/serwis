@@ -64,9 +64,9 @@ def editcar(id):
             brand = request.form["brand"]
             model = request.form["model"]
             modcar = date.today()
-            car.brand=brand
-            car.model=model
-            car.moddate=modcar
+            car.brand = brand
+            car.model = model
+            car.moddate = modcar
             db.session.commit()
             return redirect(url_for("cars"))
         else:
