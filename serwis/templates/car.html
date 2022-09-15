@@ -1,0 +1,29 @@
+{% extends "template.html" %}
+{% block title %}Cars{% endblock %}
+{% block content %}
+	<p><a href="/">Home page</a></p>
+	<p>
+		<form action="#" method="post">
+			<input type="text" name="id"/>
+			<input type="submit" value="submit"/>
+		</form>
+	</p>
+	<table border="1">
+		<tr>
+			<th>Id</th>
+			<th>Brand</th>
+			<th>Model</th>
+			<th>Date</th>
+			<th>Modification date</th>
+		</tr>
+			{% for i in cars %}
+				<tr>
+					<td>{{i._id}}</td>
+					<td>{{i.brand}}</td>
+					<td>{{i.model}}</td>
+					<td>{{i.adddate}}</td>
+					<td>{{i.moddate}}</td>
+				</tr>
+			{% endfor %}
+	</table>
+{% endblock %}
