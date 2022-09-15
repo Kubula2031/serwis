@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 
@@ -33,10 +33,10 @@ def home():
 def cars():
     if request.method == "POST":
         id = request.form["id"]
-        if id:
+        if id and id.isdecimal() and Cars.query.filter_by(_id=id).first():
             return redirect(url_for("editcar", id=id))
         else:
-            return render_template("car.html", cars=Cars.query.all())
+            return redirect(url_for("cars"))
     else:
         return render_template("car.html", cars=Cars.query.all())
 
@@ -51,7 +51,7 @@ def addcar():
         car = Cars(brand, model, addcar, modcar)
         db.session.add(car)
         db.session.commit()
-        return render_template("car.html", cars=Cars.query.all())
+        return redirect(url_for("cars"))
     else:
         return render_template("addcar.html")
 
@@ -60,15 +60,19 @@ def addcar():
 def editcar(id):
     car = Cars.query.filter_by(_id=id).first()
     if request.method == "POST":
-        brand = request.form["brand"]
-        model = request.form["model"]
-        addcar = car.adddate
-        modcar = date.today()
-        Cars.querry.filter_by(_id=id).delete()
-        car = Cars(brand, model, addcar, modcar)
-        db.session.add(car)
-        db.session.commit()
-        return render_template("car.html", cars=Cars.query.all())
+        if request.form["action"] == "submit":
+            brand = request.form["brand"]
+            model = request.form["model"]
+            modcar = date.today()
+            car.brand=brand
+            car.model=model
+            car.moddate=modcar
+            db.session.commit()
+            return redirect(url_for("cars"))
+        else:
+            Cars.query.filter_by(_id=id).delete()
+            db.session.commit()
+            return redirect(url_for("cars"))
     else:
         return render_template("editcar.html", car=car)
 
