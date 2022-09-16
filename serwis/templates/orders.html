@@ -1,0 +1,39 @@
+{% extends "template.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+	<p><a href="/">Home page</a></p>
+	<p>
+		<form action="#" method="post">
+			<input type="text" name="id"/>
+			<input type="submit" value="Edit"/>
+		</form>
+	</p>
+	<table border="1">
+		<tr>
+			<th>Id</th>
+			<th>Description</th>
+			<th>Owner</th>
+			<th>Brand</th>
+			<th>Model</th>
+			<th>Status</th>
+			<th>Date</th>
+			<th>Modification date</th>
+		</tr>
+			{% for i in orders %}
+				{% for j in cars %}
+					{% if i.car_id == j.id %}
+						<tr>
+							<td>{{i._id}}</td>
+							<td>{{i.desc}}</td>
+							<td>{{i.owner}}</td>
+							<td>{{j.brand}}</td>
+							<td>{{j.model}}</td>
+							<td>{{i.status}}</td>
+							<td>{{i.adddate}}</td>
+							<td>{{i.moddate}}</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+	</table>
+{% endblock %}

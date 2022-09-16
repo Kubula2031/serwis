@@ -1,3 +1,5 @@
+import enum
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
@@ -20,6 +22,30 @@ class Cars(db.Model):
     def __init__(self, brand, model, adddate, moddate):
         self.brand = brand
         self.model = model
+        self.adddate = adddate
+        self.moddate = moddate
+
+
+class Status(enum.Enum):
+    new = "New"
+    ongoing = "Ongoing"
+    finished = "Finished"
+
+
+class Orders(db.Model):
+    _id = db.Column("id", db.Integer, primary_key=True)
+    desc = db.Column(db.String(100))
+    owner = db.Column(db.String(40))
+    car_id = db.Column(db.Integer, db.ForeignKey(Cars._id))
+    status = db.Column(db.Enum(Status))
+    adddate = db.Column(db.Date)
+    moddate = db.Column(db.Date)
+
+    def __init__(self, desc, owner, car_id, status, adddate, moddate):
+        self.desc = desc
+        self.owner = owner
+        self.car_id = car_id
+        self.status = status
         self.adddate = adddate
         self.moddate = moddate
 
@@ -75,6 +101,35 @@ def editcar(id):
             return redirect(url_for("cars"))
     else:
         return render_template("editcar.html", car=car)
+
+
+@app.route("/orders", methods=["POST", "GET"])
+def orders():
+    if request.method == "POST":
+        id = request.form["id"]
+        if id and id.isdecimal() and Orders.query.filter_by(_id=id).first():
+            return redirect(url_for("editorder", id=id))
+        else:
+            return redirect(url_for("orders"))
+    else:
+        return render_template("orders.html", orders=Orders.query.all(), cars=Cars.query.all())
+
+
+@app.route("/addorder", methods=["POST", "GET"])
+def addorder():
+    if request.method == "POST":
+        desc = request.form["desc"]
+        owner = request.form["owner"]
+        car_id = request.form["car_id"]
+        status = request.form["status"]
+        addcar = date.today()
+        modcar = addcar
+        order = Orders(desc, owner, car_id, status, addcar, modcar)
+        db.session.add(order)
+        db.session.commit()
+        return redirect(url_for("cars"))
+    else:
+        return render_template("addcar.html")
 
 
 if __name__ == "__main__":
