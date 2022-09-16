@@ -1,10 +1,16 @@
 {% extends "template.html" %}
-{% block title %}Edit car{% endblock %}
+{% block title %}Edit order{% endblock %}
 {% block content %}
-	<p><a href="http://127.0.0.1:5000/cars">Back</a></p>
+	<p><a href="http://127.0.0.1:5000/orders">Back</a></p>
 	<form action="#" method="post">
-		<input type="text" name="brand" value="{{car.brand}}"/>
-		<input type="text" name="model" value="{{car.model}}"/>
+		<input type="text" name="desc" value="{{order.desc}}"/>
+		<input type="text" name="owner" value="{{order.owner}}"/>
+		<input type="text" name="car_id" value="{{order.car_id}}"/>
+		<select name="status">
+			<option value="New">New</Option>
+			<option value="Ongoing">Ongoing</Option>
+			<option value="Finished">Finished</Option>
+		</select>
 		<input type="submit" name="action" value="submit"/>
 		<input type="submit" name="action" value="delete"/>
 	</form>
