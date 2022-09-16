@@ -50,9 +50,9 @@ def home():
 @app.route("/cars", methods=["POST", "GET"])
 def cars():
     if request.method == "POST":
-        id = request.form["id"]
-        if id and id.isdecimal() and Cars.query.filter_by(_id=id).first():
-            return redirect(url_for("editcar", id=id))
+        cid = request.form["id"]
+        if cid and cid.isdecimal() and Cars.query.filter_by(_id=cid).first():
+            return redirect(url_for("editcar", eid=cid))
         else:
             return redirect(url_for("cars"))
     else:
@@ -64,9 +64,7 @@ def addcar():
     if request.method == "POST":
         brand = request.form["brand"]
         model = request.form["model"]
-        addcar = date.today()
-        modcar = addcar
-        car = Cars(brand, model, addcar, modcar)
+        car = Cars(brand, model, date.today(), date.today())
         db.session.add(car)
         db.session.commit()
         return redirect(url_for("cars"))
@@ -74,9 +72,9 @@ def addcar():
         return render_template("addcar.html")
 
 
-@app.route("/editcar/<id>", methods=["POST", "GET"])
-def editcar(id):
-    car = Cars.query.filter_by(_id=id).first()
+@app.route("/editcar/<eid>", methods=["POST", "GET"])
+def editcar(eid):
+    car = Cars.query.filter_by(_id=eid).first()
     if request.method == "POST":
         if request.form["action"] == "submit":
             brand = request.form["brand"]
@@ -87,8 +85,8 @@ def editcar(id):
             db.session.commit()
             return redirect(url_for("cars"))
         else:
-            Cars.query.filter_by(_id=id).delete()
-            Orders.query.filter_by(car_id=id).delete()
+            Cars.query.filter_by(_id=eid).delete()
+            Orders.query.filter_by(car_id=eid).delete()
             db.session.commit()
             return redirect(url_for("cars"))
     else:
@@ -98,9 +96,9 @@ def editcar(id):
 @app.route("/orders", methods=["POST", "GET"])
 def orders():
     if request.method == "POST":
-        id = request.form["id"]
-        if id and id.isdecimal() and Orders.query.filter_by(_id=id).first():
-            return redirect(url_for("editorder", id=id))
+        oid = request.form["id"]
+        if oid and oid.isdecimal() and Orders.query.filter_by(_id=oid).first():
+            return redirect(url_for("editorder", eid=oid))
         else:
             return redirect(url_for("orders"))
     else:
@@ -115,9 +113,7 @@ def addorder():
         car_id = request.form["car_id"]
         if Cars.query.filter_by(_id=car_id).first():
             status = "New"
-            addcar = date.today()
-            modcar = addcar
-            order = Orders(desc, owner, car_id, status, addcar, modcar)
+            order = Orders(desc, owner, car_id, status, date.today(), date.today())
             db.session.add(order)
             db.session.commit()
             return redirect(url_for("orders"))
@@ -127,9 +123,9 @@ def addorder():
         return render_template("addorder.html")
 
 
-@app.route("/editorder/<id>", methods=["POST", "GET"])
-def editorder(id):
-    order = Orders.query.filter_by(_id=id).first()
+@app.route("/editorder/<eid>", methods=["POST", "GET"])
+def editorder(eid):
+    order = Orders.query.filter_by(_id=eid).first()
     if request.method == "POST":
         if request.form["action"] == "submit":
             desc = request.form["desc"]
@@ -144,7 +140,7 @@ def editorder(id):
             db.session.commit()
             return redirect(url_for("orders"))
         else:
-            Orders.query.filter_by(_id=id).delete()
+            Orders.query.filter_by(_id=eid).delete()
             db.session.commit()
             return redirect(url_for("orders"))
     else:
