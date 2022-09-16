@@ -1,0 +1,11 @@
+{% extends "template.html" %}
+{% block title %}Edit car{% endblock %}
+{% block content %}
+	<p><a href="http://127.0.0.1:5000/cars">Back</a></p>
+	<form action="#" method="post">
+		<input type="text" name="brand" value="{{car.brand}}"/>
+		<input type="text" name="model" value="{{car.model}}"/>
+		<input type="submit" name="action" value="submit"/>
+		<input type="submit" name="action" value="delete"/>
+	</form>
+{% endblock %}

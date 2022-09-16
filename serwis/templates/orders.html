@@ -19,21 +19,19 @@
 			<th>Date</th>
 			<th>Modification date</th>
 		</tr>
-			{% for i in orders %}
-				{% for j in cars %}
-					{% if i.car_id == j.id %}
-						<tr>
-							<td>{{i._id}}</td>
-							<td>{{i.desc}}</td>
-							<td>{{i.owner}}</td>
-							<td>{{j.brand}}</td>
-							<td>{{j.model}}</td>
-							<td>{{i.status}}</td>
-							<td>{{i.adddate}}</td>
-							<td>{{i.moddate}}</td>
-						</tr>
-					{% endif %}
+		{% for i in orders %}
+			<tr>
+				<td>{{i._id}}</td>
+				<td>{{i.desc}}</td>
+				<td>{{i.owner}}</td>
+				{% for j in cars if j._id == i.car_id %}
+					<td>{{j.brand}}</td>
+					<td>{{j.model}}</td>
 				{% endfor %}
-			{% endfor %}
+				<td>{{i.status}}</td>
+				<td>{{i.adddate}}</td>
+				<td>{{i.moddate}}</td>
+			</tr>
+		{% endfor %}
 	</table>
 {% endblock %}
