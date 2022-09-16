@@ -89,11 +89,6 @@ def editcar(id):
         else:
             Cars.query.filter_by(_id=id).delete()
             Orders.query.filter_by(car_id=id).delete()
-            i = id+1
-            for i in Cars:
-                ord = Orders.query.filter_by(car_id=i)
-                ord.car_id -= 1
-                i._id -= 1
             db.session.commit()
             return redirect(url_for("cars"))
     else:
